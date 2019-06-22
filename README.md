@@ -33,8 +33,7 @@
 O software deste repositório é sobre a <b>Cadeia Alimentar</b>.
 
 Cada animal possui as seguintes informações:
- - Nome Popular
- - Nome Científico
+ - Nome
  - Habitat
 
 O usuário pode criar uma quantidade determinada de espécies de animais aleatórios, ou criar uma espécie individual, ao inserir os dados necessários.
