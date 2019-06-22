@@ -1,0 +1,6 @@
+tree/.vscode/*
+tree/tree
+tree/*.o
+tree/Makefile
+tree/.qmake.stash
+tree/tree.pro.user
