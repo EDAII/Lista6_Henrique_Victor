@@ -33,17 +33,16 @@
 O software deste repositório é sobre a <b>Cadeia Alimentar</b>.
 
 Cada animal possui as seguintes informações:
- - Nome
- - Habitat
+ - Nome Popular
+ - Filo
+ - Classe
+ - Ordem
 
-O usuário pode criar uma quantidade determinada de espécies de animais aleatórios, ou criar uma espécie individual, ao inserir os dados necessários.
-
-A partir do momento em que houver espécies registrados, o usuário pode fazer a relação predador-presa entre eles, informando:
- - Quantas espécies farão parte da cadeia
- - Quantas relações existirão na cadeia
+O usuário pode criar um grafo aleatório, informando quantas espécies (vértices) e relações (arestas) existirão.
+Ele pode ainda criar uma espécie individual, ao inserir os dados necessários, e dizer a relação entre duas espécies
 
 O usuário pode então usar os seguintes recursos, e compará-los entre si:
-- DFS
-- BFS
+- BFS (Busca em Largura)
+- DFS (Busca em Profundidade)
 
 Se quiser, o usuário pode imprimir a cadeia alimentar

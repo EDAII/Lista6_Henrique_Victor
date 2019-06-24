@@ -33,12 +33,12 @@ class Graph(object):
         if vertex1 in self.__graph_dict:
             if vertex2 not in self.__graph_dict[vertex1]:
                 self.__graph_dict[vertex1].append(vertex2)
+                return 1
             else:
-                return False
+                return 0
         else:
             self.__graph_dict[vertex1] = [vertex2]
-        
-        return True
+            return 2
 
 """
 graph.add_vertex("z")

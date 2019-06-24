@@ -29,7 +29,7 @@ def gerar_grafo_aleatorio(v, e):
             if a == b:
                 continue
 
-            if (grafo.add_edge(lista[a], lista[b]) == False):
+            if (grafo.add_edge(lista[a], lista[b]) == 0):
                 continue
 
             i += 1

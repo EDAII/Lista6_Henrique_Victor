@@ -45,22 +45,22 @@ class Interface:
         B2 = Button(frame2, text="Cadastrar Espécie Individual", width=55, bg=button_color, font=option_button_font, command=self.cadastro)
         B2.pack(side=LEFT)
 
-        B3 = Button(frame2, text="Cadastrar Relação entre Espécies", width=55, bg=button_color, font=option_button_font)
+        B3 = Button(frame2, text="Cadastrar Relação entre Espécies", width=55, bg=button_color, font=option_button_font, command=self.adicionar_relacao)
         B3.pack(side=RIGHT)
 
         B4 = Button(frame3, text="Buscar", width=112, bg=button_color, font=option_button_font)
         B4.pack(side=LEFT)
 
-        B5 = Button(frame4, text="BFS - Busca por largura", width=55, bg=button_color, font=option_button_font)
+        B5 = Button(frame4, text="BFS - Busca em Largura", width=55, bg=button_color, font=option_button_font)
         B5.pack(side=LEFT)
 
-        B6 = Button(frame4, text="DFS - Busca por profundidade", width=55, bg=button_color, font=option_button_font)
+        B6 = Button(frame4, text="DFS - Busca em Profundidade", width=55, bg=button_color, font=option_button_font)
         B6.pack(side=RIGHT)
 
-        B7 = Button(frame5, text="Comparar Metodos de Travessia (Grafo atual)", width=55, bg=button_color, font=option_button_font)
+        B7 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font)
         B7.pack(side=LEFT)
 
-        B8 = Button(frame5, text="Comparar Metodos de Travessia (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font)
+        B8 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font)
         B8.pack(side=RIGHT)
 
         B9 = Button(frame6, text="Abrir Arquivo", width=55, bg=button_color, font=option_button_font, command=self.abre_arquivo)
@@ -203,6 +203,60 @@ class Interface:
             self.msgNodes["text"] = "Quantidade de Nós: {}".format(self.qtd_nodes)
             tela.destroy()
     
+
+    def adicionar_relacao(self):
+        tela = Tk()
+        tela.title('Cadastrar Espécie Individual')
+
+        texto = Frame(tela, pady=10)
+        texto.pack()
+        frame1 = Frame(tela, pady=10)
+        frame1.pack()
+        frame2 = Frame(tela, pady=10)
+        frame2.pack()
+        botoes = Frame(tela, pady=10)
+        botoes.pack()        
+        msg = Frame(tela, pady=10)
+        msg.pack()
+
+        text = Label(texto, text="Digite os nomes das Espécies", font=text_font, pady=10)
+        text.pack()
+
+        predadortext = Label(frame1, text="Predador: ", padx=13)
+        predadortext.pack(side=LEFT)
+        predador = Entry(frame1, width=25)
+        predador.pack(side=RIGHT)
+
+        presatext = Label(frame2, text="Presa:     ", padx=8)
+        presatext.pack(side=LEFT)
+        presa = Entry(frame2, width=25)
+        presa.pack(side=RIGHT)
+
+        mensagem = Label(msg, text=" ", font=error_msg_font)
+        mensagem.pack()
+
+        botaoCancel = Button(botoes, text="CANCELAR", font=confirmation_button_font, bg='red2', command=tela.destroy)
+        botaoCancel.pack(side=LEFT)
+
+        botaoSend = Button(botoes, text="ENVIAR", font=confirmation_button_font, bg='green2', command=lambda: self.verif_relacao(predador.get(), presa.get(), mensagem, tela))
+        botaoSend.pack(side=RIGHT)
+
+        tela.geometry("650x300+650+300")
+        tela.mainloop()
+
+    def verif_relacao(self, predador, presa, mensagem, tela):
+        if len(predador) == 0:
+            mensagem["text"] = "Predador não pode estar em branco"
+        elif len(presa) == 0:
+            mensagem["text"] = "Presa não pode estar em branco"
+        else:
+            # if encontrar predador e presa
+                #self.grafo.add_edge(predador, presa)
+                self.qtd_edges += 1
+                self.msgNodes["text"] = "Quantidade de Arestas: {}".format(self.qtd_edges)
+                tela.destroy()
+            else:
+                mensagem["text"] = "As duas espécies devem existir para fazer a relação"
 
     def abre_arquivo(self):
         self.fila.clear()
