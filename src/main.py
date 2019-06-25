@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import filedialog
 from funcoes import *
 
 bg_color = "white"
@@ -8,11 +7,12 @@ option_button_font = ("Arial", "15", "bold")
 confirmation_button_font = ("Arial", "10", "bold")
 error_msg_font = ("Arial", "10", "bold")
 text_font = ("Arial", "20", "bold")
+estatistica_font = ("Arial", "15", "bold")
 
 
 class Interface:
     def __init__(self, instancia_Tk):
-        self.grafo = Graph()
+        self.grafo = Grafo()
         self.qtd_nodes = 0
         self.qtd_edges = 0
         
@@ -48,13 +48,13 @@ class Interface:
         B3 = Button(frame2, text="Cadastrar Relação entre Espécies", width=55, bg=button_color, font=option_button_font, command=self.adicionar_relacao)
         B3.pack(side=RIGHT)
 
-        B4 = Button(frame3, text="Buscar", width=112, bg=button_color, font=option_button_font)
+        B4 = Button(frame3, text="Informação sobre Espécie", width=112, bg=button_color, font=option_button_font, command=self.search)
         B4.pack(side=LEFT)
 
-        B5 = Button(frame4, text="BFS - Busca em Largura", width=55, bg=button_color, font=option_button_font)
+        B5 = Button(frame4, text="BFS - Busca em Largura (Completa)", width=55, bg=button_color, font=option_button_font)
         B5.pack(side=LEFT)
 
-        B6 = Button(frame4, text="DFS - Busca em Profundidade", width=55, bg=button_color, font=option_button_font)
+        B6 = Button(frame4, text="DFS - Busca em Profundidade (Completa)", width=55, bg=button_color, font=option_button_font)
         B6.pack(side=RIGHT)
 
         B7 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font)
@@ -63,11 +63,8 @@ class Interface:
         B8 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font)
         B8.pack(side=RIGHT)
 
-        B9 = Button(frame6, text="Abrir Arquivo", width=55, bg=button_color, font=option_button_font, command=self.abre_arquivo)
+        B9 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
         B9.pack(side=LEFT)
-
-        B10 = Button(frame6, text="Salvar", width=55, bg=button_color, font=option_button_font, command=self.salva_arquivo)
-        B10.pack(side=RIGHT)
     
 
     def gerar_grafo_aleat(self):
@@ -184,7 +181,7 @@ class Interface:
         botaoSend = Button(botoes, text="ENVIAR", font=confirmation_button_font, bg='green2', command=lambda: self.verif_cadastro(nome.get(), filo.get(), classe.get(), ordem.get(), mensagem, tela))
         botaoSend.pack(side=RIGHT)
 
-        tela.geometry("650x300+650+300")
+        tela.geometry("650x350+650+300")
         tela.mainloop()
     
 
@@ -206,7 +203,7 @@ class Interface:
 
     def adicionar_relacao(self):
         tela = Tk()
-        tela.title('Cadastrar Espécie Individual')
+        tela.title('Cadastrar Relação entre Espécies')
 
         texto = Frame(tela, pady=10)
         texto.pack()
@@ -227,7 +224,7 @@ class Interface:
         predador = Entry(frame1, width=25)
         predador.pack(side=RIGHT)
 
-        presatext = Label(frame2, text="Presa:     ", padx=8)
+        presatext = Label(frame2, text="Presa:         ", padx=8)
         presatext.pack(side=LEFT)
         presa = Entry(frame2, width=25)
         presa.pack(side=RIGHT)
@@ -241,7 +238,7 @@ class Interface:
         botaoSend = Button(botoes, text="ENVIAR", font=confirmation_button_font, bg='green2', command=lambda: self.verif_relacao(predador.get(), presa.get(), mensagem, tela))
         botaoSend.pack(side=RIGHT)
 
-        tela.geometry("650x300+650+300")
+        tela.geometry("650x250+650+300")
         tela.mainloop()
 
     def verif_relacao(self, predador, presa, mensagem, tela):
@@ -250,70 +247,118 @@ class Interface:
         elif len(presa) == 0:
             mensagem["text"] = "Presa não pode estar em branco"
         else:
-            # if encontrar predador e presa
-                #self.grafo.add_edge(predador, presa)
+            node_pred = self.grafo.find_node(predador)
+            node_presa = self.grafo.find_node(presa)
+            if node_pred != None and node_presa != None:
+                self.grafo.add_edge(node_pred, node_presa)
                 self.qtd_edges += 1
-                self.msgNodes["text"] = "Quantidade de Arestas: {}".format(self.qtd_edges)
+                self.msgEdges["text"] = "Quantidade de Arestas: {}".format(self.qtd_edges)
                 tela.destroy()
             else:
                 mensagem["text"] = "As duas espécies devem existir para fazer a relação"
 
-    def abre_arquivo(self):
-        self.fila.clear()
-        path = filedialog.askopenfilename(initialdir = "/",title = "Selecione o Arquivo",filetypes = [("eda2 files","*.eda2")])
+    def search(self):
+        tela = Tk()
+        tela.title('Buscar Espécie')
 
-        i = 0
-        nome = ""
-        sexo = ""
-        idade = ""
-        gravidade = ""
-        ordemChegada = ""
-        try:
-            with open(path, 'r') as arq:
-                for linha in arq:
-                    linha = linha.strip()
-                    if i == 0:
-                        nome = linha
-                    elif i == 1:
-                        sexo = linha
-                    elif i == 2:
-                        idade = linha
-                    elif i == 3:
-                        gravidade = int(linha)
-                    else:
-                        ordemChegada = int(linha)
-                
-                    i += 1
+        texto1 = Frame(tela, pady=10)
+        texto1.pack()
+        campo1 = Frame(tela, pady=10)
+        campo1.pack()
+        botoes = Frame(tela, pady=10)
+        botoes.pack()
+        msg = Frame(tela, pady=10)
+        msg.pack()
 
-                    if i == 5:
-                        self.fila.append(Paciente(nome, sexo, idade, gravidade, ordemChegada))
-                        i = 0
+        text1 = Label(texto1, text="Digite o nome da espécie", font=text_font)
+        text1.pack()
 
-            arq.close()
-            self.msgNodes["text"] = "Quantidade de Pessoas: {}".format(len(self.fila))
-            self.msgEdges["text"] = "Tipo de Ordenacao: Nenhuma"
-            self.ordenado = False
-        except:
-            return
+        nome = Entry(campo1)
+        nome.pack()
+
+        mensagem = Label(msg, text=" ", font=error_msg_font)
+        mensagem.pack()
+
+        botaoCancel = Button(botoes, text="CANCELAR", font=confirmation_button_font, bg='red2', command=tela.destroy)
+        botaoCancel.pack(side=LEFT)
+
+        botaoSend = Button(botoes, text="ENVIAR", font=confirmation_button_font, bg='green2', command=lambda: self.verif_busca(nome.get(), mensagem, tela))
+        botaoSend.pack(side=RIGHT)
+
+        tela.geometry("600x200+700+400")
+        tela.mainloop()
+
+    def verif_busca(self, nome, mensagem, tela_antiga):
+        if len(nome) == 0:
+            mensagem["text"] = "Nome não pode estar em branco"
+        else:
+            node, quant_presas = self.grafo.get_info(nome)
+            if node == None:
+                mensagem["text"] = "Espécie não encontrada"
+            else:
+                tela_antiga.destroy()
+
+                tela = Tk()
+                tela.title('Espécie')
+
+                msg = Frame(tela)
+                f1 = Frame(tela)
+                f2 = Frame(tela)
+                f3 = Frame(tela)
+                f4 = Frame(tela)
+                f5 = Frame(tela)
+                vazio = Frame(tela)
+                botaoFrame = Frame(tela)
+                msg.pack()
+                f1.pack()
+                f2.pack()
+                f3.pack()
+                f4.pack()
+                f5.pack()
+                vazio.pack()
+                botaoFrame.pack()
+
+                titulo = Label(msg, text='Dados da Espécie', font=text_font, pady=30)
+                titulo.pack()
+
+                textNome = Label(f1, text='Nome: ', font=estatistica_font, pady=5)
+                textNome.pack(side=LEFT)
+
+                valorNome = Label(f1, text=node.nome, font=estatistica_font, pady=5, fg='red')
+                valorNome.pack(side=RIGHT)
+
+                textFilo = Label(f2, text='Filo: ', font=estatistica_font, pady=5)
+                textFilo.pack(side=LEFT)
+
+                valorFilo = Label(f2, text=node.filo, font=estatistica_font, pady=5, fg='red')
+                valorFilo.pack(side=RIGHT)
+
+                textClasse = Label(f3, text='Classe: ', font=estatistica_font, pady=5)
+                textClasse.pack(side=LEFT)
+
+                valorClasse = Label(f3, text=node.classe, font=estatistica_font, pady=5, fg='red')
+                valorClasse.pack(side=RIGHT)
+
+                textOrdem = Label(f4, text='Ordem: ', font=estatistica_font, pady=5)
+                textOrdem.pack(side=LEFT)
+
+                valorOrdem = Label(f4, text=node.ordem, font=estatistica_font, pady=5, fg='red')
+                valorOrdem.pack(side=RIGHT)
+
+                textPresas = Label(f5, text='Quantidade de Presas: ', font=estatistica_font, pady=5)
+                textPresas.pack(side=LEFT)
+
+                valorPresas= Label(f5, text=quant_presas, font=estatistica_font, pady=5, fg='red')
+                valorPresas.pack(side=RIGHT)
+
+                vaziotext = Label(vazio, text=' ', pady=10)
+                vaziotext.pack()
+                botao = Button(botaoFrame, text=" OK ", command=tela.destroy)
+                botao.pack()
+                tela.geometry("550x350+700+400")
+                tela.mainloop()
 
 
-    def salva_arquivo(self):
-        path = filedialog.asksaveasfilename(initialdir = "/",title = "Selecione o Local para Salvar",filetypes = [("eda2 files","*.eda2")])
-        
-        try:
-            arq = open(path, 'w')
-
-            for i in range(len(self.fila)):
-                arq.write('{}\n'.format(self.fila[i].nome))
-                arq.write('{}\n'.format(self.fila[i].sexo))
-                arq.write('{}\n'.format(self.fila[i].idade))
-                arq.write('{}\n'.format(self.fila[i].gravidade))
-                arq.write('{}\n'.format(self.fila[i].ordemChegada))
-        
-            arq.close()
-        except:
-            return
-    
     def aviso(self, mensagem):
         tela = Tk()
         tela.title('Aviso')
@@ -331,14 +376,12 @@ class Interface:
 
         tela.geometry("550x100+700+400")
         tela.mainloop()
-
-    def mostrar_fila_ordenada(self):
-        if len(self.fila) == 0:
-            self.aviso("Nao ha nenhuma pessoa na fila")
-        elif self.ordenado == False:
-            self.aviso("Primeiro use algum Metodo de Ordenacao")
+    
+    def mostrar_grafo(self):
+        if self.qtd_nodes == 0:
+            self.aviso("Nao ha nenhuma espécie no grafo")
         else:
-            mostrar_fila(self.fila, len(self.fila))
+            printar_grafo(self.grafo)
 
 
 if __name__ == '__main__':

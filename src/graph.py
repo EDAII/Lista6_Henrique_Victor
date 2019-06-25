@@ -1,4 +1,4 @@
-class Graph(object):
+class Grafo(object):
 
     __slots__ = ['__graph_dict']
 
@@ -39,6 +39,24 @@ class Graph(object):
         else:
             self.__graph_dict[vertex1] = [vertex2]
             return 2
+    
+    def find_node(self, nome):
+        for vertice in self.__graph_dict:
+            if vertice.nome == nome:
+                return vertice
+
+            for v in self.__graph_dict[vertice]:
+                if v.nome == nome:
+                    return v
+        
+        return None
+    
+    def get_info(self, nome):
+        for v in self.__graph_dict:
+            if v.nome == nome:
+                return v, len(self.__graph_dict[v])
+        
+        return None, 0
 
 """
 graph.add_vertex("z")
