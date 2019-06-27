@@ -2,14 +2,12 @@ class Grafo(object):
 
     __slots__ = ['__graph_dict']
 
-    def __init__(self, graph_dict=None):
+    def __init__(self):
         """ initializes a graph object 
             If no dictionary or None is given, 
             an empty dictionary will be used
         """
-        if graph_dict == None:
-            graph_dict = {}
-        self.__graph_dict = graph_dict
+        self.__graph_dict = {}
 
     def vertices(self):
         """ returns the vertices of a graph """
@@ -37,8 +35,7 @@ class Grafo(object):
             else:
                 return 0
         else:
-            self.__graph_dict[vertex1] = [vertex2]
-            return 2
+            return 0
     
     def find_node(self, nome):
         for vertice in self.__graph_dict:

@@ -57,10 +57,10 @@ class Interface:
         B6 = Button(frame4, text="DFS - Busca em Profundidade (Completa)", width=55, bg=button_color, font=option_button_font)
         B6.pack(side=RIGHT)
 
-        B7 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font)
+        B7 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos(self.grafo))
         B7.pack(side=LEFT)
 
-        B8 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font)
+        B8 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
         B8.pack(side=RIGHT)
 
         B9 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
@@ -114,7 +114,7 @@ class Interface:
             nodes = int(nodes)
             edges = int(edges)
             if (nodes > 0) and (edges > 0):
-                limite = nodes * nodes - nodes
+                limite = nodes * nodes
                 if edges <= limite:
                     self.grafo = gerar_grafo_aleatorio(nodes, edges)
                     tela.destroy()
