@@ -57,7 +57,7 @@ class Interface:
         B6 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos(self.grafo))
         B6.pack(side=LEFT)
 
-        B7 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
+        B7 = Button(frame5, text="Comparar Métodos de Busca (Vários Grafos Aleatórios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
         B7.pack(side=RIGHT)
 
         B8 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
@@ -434,7 +434,7 @@ class Interface:
 
 if __name__ == '__main__':
     menu=Tk()
-    menu.title('LISTA 3 - ESTRUTURA DE DADOS 2')
+    menu.title('LISTA 6 - ESTRUTURA DE DADOS 2')
     menu.config(background=bg_color)
     menu.geometry("1400x450+300+200")
     Interface(menu)
