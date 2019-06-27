@@ -33,7 +33,7 @@ class Grafo(object):
                 self.__graph_dict[vertex1].append(vertex2)
                 return 1
             else:
-                return 0
+                return -1
         else:
             return 0
     
@@ -55,7 +55,42 @@ class Grafo(object):
         
         return None, 0
 
-"""
-graph.add_vertex("z")
-graph.add_edge({"a","z"})
-"""
+    def connectivity(self):
+        reverse = Grafo()
+        for vertice in self.__graph_dict:
+            for v in self.__graph_dict[vertice]:
+                reverse.add_vertex(v)
+                reverse.add_edge(v, vertice)
+
+        if self.BFS_test() == True and reverse.BFS_test() == True:
+            return "Sim"
+        else:
+            return "Não"
+
+    
+    def BFS_test(self):
+        lista = self.__graph_dict.keys()
+        for vertice in self.__graph_dict:
+            start = vertice
+            break
+
+        queue = []
+        visited = []
+        queue.append(start)
+        visited.append(start)
+        while len(queue) != 0:
+            prox = queue[0]
+            queue.pop(0)
+
+            for v in self.__graph_dict[prox]:
+                if v not in visited:            
+                    visited.append(v)
+                    queue.append(v)
+
+        verif = True
+        for vertice in lista:
+            if vertice not in visited:
+                verif = False
+                break
+
+        return verif

@@ -15,7 +15,7 @@ from graphviz import Digraph
 quant_process = 4
 visited_dfs = []
 tam_max = 100
-salto = 4
+salto = 2
 
 def gerar_grafo_aleatorio(v, e):
     grafo = Grafo()
@@ -161,6 +161,7 @@ def printar_grafo(grafo):
     dot = Digraph(format='png')
 
     for vertice in grafo._Grafo__graph_dict:
+        dot.node(vertice.nome)
         for v in grafo._Grafo__graph_dict[vertice]:
             dot.edge(vertice.nome, v.nome)
     

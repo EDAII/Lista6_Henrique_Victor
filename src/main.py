@@ -31,11 +31,11 @@ class Interface:
         frame6 = Frame(instancia_Tk, background=bg_color, pady=6)
         frame6.pack()
 
-        self.msgNodes = Label(topo, text = "Quantidade de Nós: {}".format(self.qtd_nodes))
+        self.msgNodes = Label(topo, text = "Quantidade de Espécies: {}".format(self.qtd_nodes))
         self.msgNodes.config(background=bg_color, font=text_font, padx=150)
         self.msgNodes.pack(side=LEFT)
 
-        self.msgEdges = Label(topo, text = "Quantidade de Arestas: {}".format(self.qtd_edges))
+        self.msgEdges = Label(topo, text = "Quantidade de Relações: {}".format(self.qtd_edges))
         self.msgEdges.config(background=bg_color, font=text_font, padx=150)
         self.msgEdges.pack(side=RIGHT)
 
@@ -51,20 +51,17 @@ class Interface:
         B4 = Button(frame3, text="Informação sobre Espécie", width=112, bg=button_color, font=option_button_font, command=self.search)
         B4.pack(side=LEFT)
 
-        B5 = Button(frame4, text="BFS - Busca em Largura (Completa)", width=55, bg=button_color, font=option_button_font)
+        B5 = Button(frame4, text="Dados sobre o Grafo", width=112, bg=button_color, font=option_button_font, command=self.print_info)
         B5.pack(side=LEFT)
 
-        B6 = Button(frame4, text="DFS - Busca em Profundidade (Completa)", width=55, bg=button_color, font=option_button_font)
-        B6.pack(side=RIGHT)
+        B6 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos(self.grafo))
+        B6.pack(side=LEFT)
 
-        B7 = Button(frame5, text="Comparar Métodos de Busca (Grafo atual)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos(self.grafo))
-        B7.pack(side=LEFT)
+        B7 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
+        B7.pack(side=RIGHT)
 
-        B8 = Button(frame5, text="Comparar Metodos de Busca (Varios Grafos Aleatorios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
-        B8.pack(side=RIGHT)
-
-        B9 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
-        B9.pack(side=LEFT)
+        B8 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
+        B8.pack(side=LEFT)
     
 
     def gerar_grafo_aleat(self):
@@ -113,19 +110,22 @@ class Interface:
         try:
             nodes = int(nodes)
             edges = int(edges)
-            if (nodes > 0) and (edges > 0):
-                limite = nodes * nodes
-                if edges <= limite:
-                    self.grafo = gerar_grafo_aleatorio(nodes, edges)
-                    tela.destroy()
-                    self.msgNodes["text"] = "Quantidade de Nós: {}".format(nodes)
-                    self.msgEdges["text"] = "Quantidade de Arestas: {}".format(edges)
-                    self.qtd_nodes = nodes
-                    self.qtd_edges = edges
+            if (nodes > 0) and (edges >= 0):
+                if nodes <= len(animais):
+                    limite = nodes * nodes
+                    if edges <= limite:
+                        self.grafo = gerar_grafo_aleatorio(nodes, edges)
+                        tela.destroy()
+                        self.msgNodes["text"] = "Quantidade de Espécies: {}".format(nodes)
+                        self.msgEdges["text"] = "Quantidade de Relações: {}".format(edges)
+                        self.qtd_nodes = nodes
+                        self.qtd_edges = edges
+                    else:
+                        mensagem["text"] = "Quantidade de Relações deve estar entre 0 e {}".format(limite)
                 else:
-                    mensagem["text"] = "Quantidade de Relações deve estar entre 0 e {}".format(limite)
+                    mensagem["text"] = "Quantidade de Espécies deve estar entre 1 e {}".format(len(animais))
             else:
-                mensagem["text"] = "Numero deve ser maior do que 0"
+                mensagem["text"] = "Numero deve ser 0 ou maior"
         except ValueError:
             mensagem["text"] = "Deve ser um numero valido"
 
@@ -195,10 +195,14 @@ class Interface:
         elif len(ordem) == 0:
             mensagem["text"] = "Ordem não pode estar em branco"
         else:
-            self.grafo.add_vertex(Especie(nome, filo, classe, ordem))
-            self.qtd_nodes += 1
-            self.msgNodes["text"] = "Quantidade de Nós: {}".format(self.qtd_nodes)
-            tela.destroy()
+            node = self.grafo.find_node(nome)
+            if node == None:
+                self.grafo.add_vertex(Especie(nome, filo, classe, ordem))
+                self.qtd_nodes += 1
+                self.msgNodes["text"] = "Quantidade de Espécies: {}".format(self.qtd_nodes)
+                tela.destroy()
+            else:
+                mensagem["text"] = "Já existe uma espécie com esse nome"
     
 
     def adicionar_relacao(self):
@@ -250,10 +254,12 @@ class Interface:
             node_pred = self.grafo.find_node(predador)
             node_presa = self.grafo.find_node(presa)
             if node_pred != None and node_presa != None:
-                self.grafo.add_edge(node_pred, node_presa)
-                self.qtd_edges += 1
-                self.msgEdges["text"] = "Quantidade de Arestas: {}".format(self.qtd_edges)
-                tela.destroy()
+                if self.grafo.add_edge(node_pred, node_presa) != -1:
+                    self.qtd_edges += 1
+                    self.msgEdges["text"] = "Quantidade de Relações: {}".format(self.qtd_edges)
+                    tela.destroy()
+                else:
+                    mensagem["text"] = "Essa relação já existe"
             else:
                 mensagem["text"] = "As duas espécies devem existir para fazer a relação"
 
@@ -382,7 +388,49 @@ class Interface:
             self.aviso("Nao ha nenhuma espécie no grafo")
         else:
             printar_grafo(self.grafo)
+    
 
+    def print_info(self):
+        if self.qtd_nodes == 0:
+            self.aviso("Nao ha nenhuma espécie no grafo")
+        else:
+            tela = Tk()
+            tela.title('Dados')
+
+            msg = Frame(tela)
+            f1 = Frame(tela)
+            f2 = Frame(tela)
+            f3 = Frame(tela)
+            vazio = Frame(tela)
+            botaoFrame = Frame(tela)
+            msg.pack()
+            f1.pack()
+            f2.pack()
+            f3.pack()
+            vazio.pack()
+            botaoFrame.pack()
+            titulo = Label(msg, text='Dados do Grafo', font=text_font, pady=30)
+            titulo.pack()
+            textNome = Label(f1, text='Quantidade de Nós: ', font=estatistica_font, pady=5)
+            textNome.pack(side=LEFT)
+            valorNome = Label(f1, text=str(self.qtd_nodes), font=estatistica_font, pady=5, fg='red')
+            valorNome.pack(side=RIGHT)
+            textFilo = Label(f2, text='Quantidade de Arestas: ', font=estatistica_font, pady=5)
+            textFilo.pack(side=LEFT)
+            valorFilo = Label(f2, text=str(self.qtd_edges), font=estatistica_font, pady=5, fg='red')
+            valorFilo.pack(side=RIGHT)
+            textClasse = Label(f3, text='Conectado? ', font=estatistica_font, pady=5)
+            textClasse.pack(side=LEFT)
+            valorClasse = Label(f3, text=self.grafo.connectivity(), font=estatistica_font, pady=5, fg='red')
+            valorClasse.pack(side=RIGHT)
+
+            vaziotext = Label(vazio, text=' ', pady=10)
+            vaziotext.pack()
+            
+            botao = Button(botaoFrame, text=" OK ", command=tela.destroy)
+            botao.pack()
+            tela.geometry("550x280+700+400")
+            tela.mainloop()
 
 if __name__ == '__main__':
     menu=Tk()
