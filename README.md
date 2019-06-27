@@ -39,10 +39,16 @@ Cada animal possui as seguintes informações:
  - Ordem
 
 O usuário pode criar um grafo aleatório, informando quantas espécies (vértices) e relações (arestas) existirão.
-Ele pode ainda criar uma espécie individual, ao inserir os dados necessários, e dizer a relação entre duas espécies
 
-O usuário pode então usar os seguintes recursos, e compará-los entre si:
-- BFS (Busca em Largura)
-- DFS (Busca em Profundidade)
+Ele pode ainda criar uma espécie individual, ao inserir os dados necessários, e dizer a relação entre duas espécies.
 
-Se quiser, o usuário pode imprimir a cadeia alimentar
+Com espécies criadas, o usuário pode fazer uma busca, que retornará as informações da espécie caso seja encontrada.
+
+Além das informações sobre espécies, o usuário pode ver informações sobre o grafo, como:
+ - Quantidade de nós
+ - Quantidade de arestas
+ - Se o grafo é conectado ou não
+
+O usuário pode então comparar os métodos de busca existentes (BFS e DFS) no grafo atual ou em grafos aleatórios
+
+Se quiser, o usuário pode gerar uma imagem sobre a cadeia alimentar
