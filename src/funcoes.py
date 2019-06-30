@@ -292,7 +292,3 @@ def aquatico():
     grafo.add_edge(grafo.find_node("Camarão-mouro"), grafo.find_node("Zooplâncton"))
 
     return grafo
-
-
-# grafo.add_vertex(Especie("", filos[random.randrange(0, len(filos))], classes[random.randrange(0, len(classes))], ordens[random.randrange(0, len(ordens))]))
-# grafo.add_edge(grafo.find_node(""), grafo.find_node(""))
