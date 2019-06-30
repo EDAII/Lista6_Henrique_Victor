@@ -60,8 +60,11 @@ class Interface:
         B7 = Button(frame5, text="Comparar Métodos de Busca (Vários Grafos Aleatórios)", width=55, bg=button_color, font=option_button_font, command=lambda: comparar_tempos())
         B7.pack(side=RIGHT)
 
-        B8 = Button(frame6, text="Gerar Arvore", width=112, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
+        B8 = Button(frame6, text="Gerar Arvore", width=55, bg=button_color, font=option_button_font, command=self.mostrar_grafo)
         B8.pack(side=LEFT)
+
+        B9 = Button(frame6, text="Exemplos", width=55, bg=button_color, font=option_button_font, command=self.exemplos)
+        B9.pack(side=RIGHT)
     
 
     def gerar_grafo_aleat(self):
@@ -431,6 +434,31 @@ class Interface:
             botao.pack()
             tela.geometry("550x280+700+400")
             tela.mainloop()
+    
+
+    def exemplos(self):
+        tela = Tk()
+        tela.title('Exemplos')
+
+        top = Frame(tela)
+        middle = Frame(tela)
+        top.pack()
+        middle.pack()
+
+        text = Label(top, text="Escolha um dos exemplos abaixo", font=text_font, pady=10)
+        text.grid(row=0, pady=5)
+
+        B1 = Button(middle, text="Pantanal", width=30, bg=button_color, font=option_button_font, command=lambda: printar_grafo(pantanal()))
+        B1.grid(row=1, padx=10, pady=5)
+
+        B2 = Button(middle, text="Meio Terrestre", width=30, bg=button_color, font=option_button_font, command=lambda: printar_grafo(terrestre()))
+        B2.grid(row=2, padx=10, pady=5)
+
+        B3 = Button(middle, text="Meio Aquático", width=30, bg=button_color, font=option_button_font, command=lambda: printar_grafo(aquatico()))
+        B3.grid(row=3, padx=10, pady=5)
+
+        tela.geometry("500x220+750+300")
+        tela.mainloop()
 
 if __name__ == '__main__':
     menu=Tk()
